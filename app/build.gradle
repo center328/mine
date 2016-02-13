@@ -1,0 +1,82 @@
+apply plugin: 'com.android.model.library'
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'NativeGol'
+
+    publishedGroupId = 'com.inthecheesefactory.thecheeselibrary'
+    libraryName = 'NativeGol'
+    artifact = 'NativeGol'
+
+    libraryDescription = 'A wrapper for Facebook Native Like Button (LikeView) on Android'
+
+    siteUrl = 'https://github.com/center328/mine'
+    gitUrl = 'https://github.com/center328/mine.git'
+
+    libraryVersion = '0.9.3'
+
+    developerId = 'center328'
+    developerName = 'mahdi arezoumandi'
+    developerEmail = 'center328.a@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+model {
+    android {
+        compileSdkVersion = 23
+        buildToolsVersion = "23.0.2"
+
+        defaultConfig.with {
+            minSdkVersion.apiLevel    = 14
+            targetSdkVersion.apiLevel = 15
+        }
+    }
+
+    compileOptions.with {
+        sourceCompatibility=JavaVersion.VERSION_1_7
+        targetCompatibility=JavaVersion.VERSION_1_7
+    }
+
+    android.ndk {
+        moduleName = "lib4gol"
+        cppFlags.add("-UNDEBUG")
+//        ldLibs.addAll(["log", "GLESv2"])
+        ldLibs.addAll(["android", "log"])
+        stl     = "stlport_static"
+    }
+
+    android.buildTypes {
+        release {
+            minifyEnabled = false
+            proguardFiles.add(file('proguard-rules.txt'))
+        }
+    }
+
+    android.productFlavors {
+        create ("arm7") {
+            ndk.abiFilters.add("armeabi-v7a")
+        }
+        create ("arm") {
+            ndk.abiFilters.add("armeabi")
+        }
+        create ("arm8") {
+            ndk.abiFilters.add("arm64-v8a")
+        }
+        create ("x86-32") {
+            ndk.abiFilters.add("x86")
+        }
+        // for detailed abiFilter descriptions, refer to "Supported ABIs" @
+        // https://developer.android.com/ndk/guides/abis.html#sa
+
+        // build one including all cpu architectures
+        create("all")
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+
+}
